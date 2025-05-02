@@ -18,53 +18,54 @@ use App\Models\User;
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
+| Aquí se registran todas las rutas accesibles desde el navegador.
+| Cada ruta está asociada a un controlador o closure.
 */
 
-Route::get('/', HomeController::class)->name('home'); //muestra la página principal, 
-//como "HomeController solo tiene un metodo "__invoke" (que hace como un constructor) no hace falta nombrar el método ni el array
+// Página principal (controlador HomeController con método __invoke)
+Route::get('/', HomeController::class)->name('home');
 
-Route::get('/register', [RegisterController::class,'index'])->name('register'); //muestra el formulario de registro
-Route::post('/register', [RegisterController::class,'store'])->name('register.store'); //envia el registro
+// Registro de usuario
+Route::get('/register', [RegisterController::class,'index'])->name('register'); // Muestra formulario
+Route::post('/register', [RegisterController::class,'store'])->name('register.store'); // Procesa datos
 
-Route::get('/login', [LoginController::class,'index'])->name('login'); //muestra el formulario de login
-Route::post('/login', [LoginController::class,'store']); //envia el login
-Route::post('/logout', [LogoutController::class,'store'])->name('logout'); //cierra la sesion
+// Login y logout
+Route::get('/login', [LoginController::class,'index'])->name('login'); // Formulario login
+Route::post('/login', [LoginController::class,'store']);               // Procesa login
+Route::post('/logout', [LogoutController::class,'store'])->name('logout'); // Cierra sesión
 
-//rutas para el perfil
-Route::get('/editar-perfil', [PerfilController::class,'index'])->name('perfil.index'); //muestra el formulario de editar perfil
-Route::post('/editar-perfil', [PerfilController::class,'store'])->name('perfil.store');  //envia el formulario de editar perfil
+// Editar perfil
+Route::get('/editar-perfil', [PerfilController::class,'index'])->name('perfil.index'); // Formulario edición
+Route::post('/editar-perfil', [PerfilController::class,'store'])->name('perfil.store'); // Guarda cambios
 
+// Crear y ver posts
+Route::get('/posts/create', [PostController::class,'create'])->name('posts.create'); // Formulario nuevo post
+Route::post('/posts', [PostController::class,'store'])->name('posts.store');         // Guarda post
+Route::get('/{user:username}/posts/{post}', [PostController::class,'show'])->name('posts.show'); // Ver detalle
+Route::delete('/posts/{post}', [PostController::class,'destroy'])->name('posts.destroy');       // Eliminar post
 
-Route::get('/posts/create', [PostController::class,'create'])->name('posts.create'); //muestra el formulario para crear un post
-Route::post('/posts', [PostController::class,'store'])->name('posts.store'); //envia el post de la vista posts.create de un usuario
-Route::get('/{user:username}/posts/{post}', [PostController::class,'show'])->name('posts.show'); //muestra el post con route model binding
+// Comentar un post
+Route::post('/{user:username}/posts/{post}', [ComentarioController::class,'store'])->name('comentarios.store'); // Añadir comentario
 
-Route::delete('/posts/{post}', [PostController::class,'destroy'])->name('posts.destroy'); //elimina el post de la vista posts.show de un usuario
+// 🔥 NUEVA RUTA: Eliminar comentario (requiere método destroy y política)
+Route::delete('/comentarios/{comentario}', [ComentarioController::class, 'destroy'])->name('comentarios.destroy');
 
-Route::post('/{user:username}/posts/{post}', [ComentarioController::class,'store'])->name('comentarios.store'); //envia el comentario de la vista posts.show de un usuario
+// Subida de imágenes desde el editor de post (Dropzone)
+Route::post('/imagenes', [ImagenController::class,'store'])->name('imagenes.store');
 
+// Likes a los posts
+Route::post('/posts/{post}/likes', [LikeController::class,'store'])->name('posts.likes.store');
+Route::delete('/posts/{post}/likes', [LikeController::class,'destroy'])->name('posts.likes.destroy');
 
-Route::post('/imagenes', [ImagenController::class,'store'])->name('imagenes.store'); //envia la imagen de la vista posts.create
+// Seguir y dejar de seguir a un usuario
+Route::post('/{user:username}/follow', [FollowerController::class, 'store'])->name('users.follow');
+Route::delete('/{user:username}/unfollow', [FollowerController::class, 'destroy'])->name('users.unfollow');
 
-//like a las fotos
-Route::post('/posts/{post}/likes', [LikeController::class,'store'])->name('posts.likes.store'); 
+// 🔥 NUEVAS RUTAS: obtener seguidores y seguidos como JSON para modales
+Route::get('/{user:username}/seguidores', [FollowerController::class, 'seguidores'])->name('users.seguidores');
+Route::get('/{user:username}/seguidos', [FollowerController::class, 'seguidos'])->name('users.seguidos');
 
-//eliminar like a las fotos
-Route::delete('/posts/{post}/likes', [LikeController::class,'destroy'])->name('posts.likes.destroy'); 
-
-
-
-//siguiendo a un usuario
-Route::post('/{user:username}/follow', [FollowerController::class, 'store'])->name('users.follow'); //envia el usuario a seguir
-Route::delete('/{user:username}/unfollow', [FollowerController::class, 'destroy'])->name('users.unfollow'); //elimina el usuario a seguir
-
-
-
+// Búsqueda de usuarios para el autocompletado en el header
 Route::get('/buscar-usuarios', function (Request $request) {
     $query = $request->query('q');
 
@@ -73,13 +74,12 @@ Route::get('/buscar-usuarios', function (Request $request) {
     }
 
     $usuarios = User::where('username', 'like', $query . '%')
-                    ->where('id', '!=', auth()->id()) // Excluir usuario actual
+                    ->where('id', '!=', auth()->id()) // Excluir al usuario actual
                     ->limit(10)
                     ->get(['id', 'username', 'imagen']);
 
     return response()->json($usuarios);
 })->middleware('auth')->name('buscar.usuarios');
 
-Route::get('/{user:username}', [PostController::class,'index'])->name('post.index'); //muestra el muro con route model binding
-
-
+// Perfil del usuario con listado de sus publicaciones
+Route::get('/{user:username}', [PostController::class,'index'])->name('post.index');
