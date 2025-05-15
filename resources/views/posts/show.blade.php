@@ -32,7 +32,7 @@
     </div>
 
     {{-- Columna derecha: comentarios y códigos --}}
-    <div class="md:w-1/2 p-5">
+    <div class="md:w-1/2 px-5">
         <div class="shadow bg-white p-5 mb-5">
             @auth
                 <p class="text-xl font-bold text-center mb-4">Agrega un Nuevo Comentario</p>
