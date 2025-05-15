@@ -11,6 +11,7 @@ use App\Http\Controllers\LikeController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\CodigoController; // ✅ Importamos el controlador de código
 use Illuminate\Http\Request;
 use App\Models\User;
 
@@ -80,6 +81,18 @@ Route::get('/buscar-usuarios', function (Request $request) {
 
     return response()->json($usuarios);
 })->middleware('auth')->name('buscar.usuarios');
+
+// ✅ NUEVAS RUTAS para compartir y eliminar fragmentos de código
+
+// Almacenar código asociado a un post
+Route::post('/posts/{post}/codigo', [CodigoController::class, 'store'])
+    ->name('codigos.store')
+    ->middleware('auth');
+
+// Eliminar código compartido
+Route::delete('/codigo/{codigo}', [CodigoController::class, 'destroy'])
+    ->name('codigos.destroy')
+    ->middleware('auth');
 
 // Perfil del usuario con listado de sus publicaciones
 Route::get('/{user:username}', [PostController::class,'index'])->name('post.index');
