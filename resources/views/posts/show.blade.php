@@ -36,15 +36,12 @@
 
     {{-- Columna derecha: comentarios, compartir y códigos compartidos --}}
     <div class="md:w-1/2 px-5">
-        {{-- Contenedor unificado para comentario + compartir código + lista de códigos --}}
         <div class="shadow bg-white dark:bg-gray-800 p-5 mb-5">
             @auth
-                {{-- Título Nuevo Comentario --}}
                 <p class="text-xl font-bold text-center mb-4 dark:text-gray-100">
                     Agrega un Nuevo Comentario
                 </p>
 
-                {{-- Mensaje de éxito --}}
                 @if (session('mensaje'))
                     <div id="mensaje-temporal" class="bg-green-500 p-2 rounded-lg mb-6 text-white text-center uppercase font-bold">
                         {{ session('mensaje') }}
@@ -85,10 +82,42 @@
                     />
                 </form>
 
-                {{-- Línea separadora antes de Compartir Código --}}
+                {{-- LISTADO DE COMENTARIOS DE ESTE POST --}}
+                @if($post->comentarios->count())
+                    <div class="mb-6">
+                        <h3 class="text-lg font-bold mb-3 dark:text-gray-100">Comentarios</h3>
+                        <ul>
+                            @foreach ($post->comentarios()->latest()->get() as $comentario)
+                                <li class="mb-3 border-b border-gray-200 dark:border-gray-600 pb-2">
+                                    {{-- Usuario y fecha en una sola línea, sin margen inferior --}}
+                                    <div class="flex items-center gap-2">
+                                        <span class="font-bold text-blue-700 dark:text-blue-400">{{ $comentario->user->username }}</span>
+                                        <span class="text-xs text-gray-500 dark:text-gray-400">{{ $comentario->created_at->diffForHumans() }}</span>
+                                    </div>
+                                    {{-- Comentario pegado justo debajo, sin márgenes y con texto ajustado --}}
+                                    <div class="comentario-html break-words whitespace-pre-line leading-tight p-0 m-0">
+                                        {!! formatear_urls($comentario->comentario) !!}
+                                    </div>
+                                    {{-- Botón eliminar comentario solo para el autor --}}
+                                    @if(auth()->id() === $comentario->user_id)
+                                        <form action="{{ route('comentarios.destroy', $comentario) }}" method="POST" class="mt-1">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="bg-red-500 hover:bg-red-600 text-white text-xs px-2 py-1 rounded">
+                                                Eliminar Comentario
+                                            </button>
+                                        </form>
+                                    @endif
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @else
+                    <p class="mb-6 text-sm text-gray-500 dark:text-gray-400">Sé el primero en comentar.</p>
+                @endif
+
                 <hr class="border-gray-200 dark:border-gray-600 my-6">
 
-                {{-- Título Compartir Código --}}
                 <p class="text-xl font-bold text-center mb-4 dark:text-gray-100">
                     Comparte tu Código
                 </p>
@@ -140,10 +169,8 @@
                     </button>
                 </form>
 
-                {{-- Línea separadora antes de la lista de códigos compartidos --}}
                 <hr class="border-gray-200 dark:border-gray-600 my-6">
 
-                {{-- Lista de Códigos Compartidos --}}
                 <h3 class="text-xl font-bold text-center mb-4 dark:text-gray-100">
                     Códigos Compartidos
                 </h3>
