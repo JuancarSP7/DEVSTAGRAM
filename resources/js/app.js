@@ -1,5 +1,14 @@
+// IMPORTACIÓN DE ALPINE.JS EN EL BUNDLE
+import Alpine from 'alpinejs';
+
+window.Alpine = Alpine;
+Alpine.start();
+
 import Dropzone from "dropzone";
 
+// --------------------------------------------
+// Configuración de Dropzone (sin cambios)
+// --------------------------------------------
 Dropzone.autoDiscover = false;
 
 const dropzone = new Dropzone('#dropzone', {
@@ -11,26 +20,22 @@ const dropzone = new Dropzone('#dropzone', {
     uploadMultiple: false,
 
     init: function() {
-        if(document.querySelector('[name="imagen"]').value.trim()){
+        if (document.querySelector('[name="imagen"]').value.trim()) {
             const imagenPublicada = {};
             imagenPublicada.size = 1234;    // tamaño ficticio
             imagenPublicada.name = document.querySelector('[name="imagen"]').value;
-            this.options.addedfile.call(this, imagenPublicada);            //opcion de Dropzone para añadir archivo
-            this.options.thumbnail.call(this, imagenPublicada, `/uploads/${imagenPublicada.name}`);        //opcion de DRopzone para añadir miniatura
+            this.options.addedfile.call(this, imagenPublicada);
+            this.options.thumbnail.call(this, imagenPublicada, `/uploads/${imagenPublicada.name}`);
             imagenPublicada.previewElement.classList.add('dz-success', 'dz-complete');
         }
     },
-    
 });
 
-
 dropzone.on('success', function(file, response) {
-    document.querySelector('[name="imagen"]').value = response.imagen;   // Asigna la imagen al input oculto
+    document.querySelector('[name="imagen"]').value = response.imagen;
 });
 
 dropzone.on('removedfile', function() {
-    document.querySelector('[name="imagen"]').value = "";   // Limpia el input oculto
-    // Eliminar la imagen del servidor
-});    
-
-
+    document.querySelector('[name="imagen"]').value = "";
+    // Aquí podrías hacer una petición para eliminar la imagen en el servidor
+});
