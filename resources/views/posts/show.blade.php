@@ -9,15 +9,16 @@
     {{-- Columna izquierda: imagen y post --}}
     <div class="md:w-1/2 flex-shrink-0">
         <img src="{{ asset('uploads') . '/' . $post->imagen }}" alt="Imagen del post {{ $post->titulo }}">
+        {{-- Likes y botón de like, solo un texto de likes, blanco en modo oscuro --}}
         <div class="p-3 flex items-center gap-4">
             @auth
                 <livewire:like-post :post="$post" />
             @endauth
         </div>
         <div>
-            <p class="font-bold dark:text-gray-100">{{ $post->user->username }}</p>
-            <p class="text-sm text-gray-500 dark:text-gray-400">{{ $post->created_at->diffForHumans() }}</p>
-            <p class="mt-5 dark:text-gray-200">{{ $post->descripcion }}</p>
+            <p class="font-bold dark:text-gray-100 text-gray-900">{{ $post->user->username }}</p>
+            <p class="text-sm text-gray-500 dark:text-gray-300">{{ $post->created_at->diffForHumans() }}</p>
+            <p class="mt-5 text-gray-800 dark:text-gray-100">{{ $post->descripcion }}</p>
         </div>
         @auth
             @if ($post->user_id === auth()->user()->id)
@@ -38,10 +39,12 @@
     <div class="md:w-1/2 px-5">
         <div class="shadow bg-white dark:bg-gray-800 p-5 mb-5">
             @auth
+                {{-- Título Nuevo Comentario --}}
                 <p class="text-xl font-bold text-center mb-4 dark:text-gray-100">
                     Agrega un Nuevo Comentario
                 </p>
 
+                {{-- Mensaje de éxito --}}
                 @if (session('mensaje'))
                     <div id="mensaje-temporal" class="bg-green-500 p-2 rounded-lg mb-6 text-white text-center uppercase font-bold">
                         {{ session('mensaje') }}
@@ -89,13 +92,13 @@
                         <ul>
                             @foreach ($post->comentarios()->latest()->get() as $comentario)
                                 <li class="mb-3 border-b border-gray-200 dark:border-gray-600 pb-2">
-                                    {{-- Usuario y fecha en una sola línea, sin margen inferior --}}
+                                    {{-- Usuario y fecha juntos, con colores claros en modo oscuro --}}
                                     <div class="flex items-center gap-2">
-                                        <span class="font-bold text-blue-700 dark:text-blue-400">{{ $comentario->user->username }}</span>
-                                        <span class="text-xs text-gray-500 dark:text-gray-400">{{ $comentario->created_at->diffForHumans() }}</span>
+                                        <span class="font-bold text-blue-700 dark:text-blue-300">{{ $comentario->user->username }}</span>
+                                        <span class="text-xs text-gray-500 dark:text-gray-200">{{ $comentario->created_at->diffForHumans() }}</span>
                                     </div>
-                                    {{-- Comentario pegado justo debajo, sin márgenes y con texto ajustado --}}
-                                    <div class="comentario-html break-words whitespace-pre-line leading-tight p-0 m-0">
+                                    {{-- Comentario: color claro en modo oscuro, texto ajustado, sin margen extra --}}
+                                    <div class="comentario-html break-words whitespace-pre-line leading-tight p-0 m-0 dark:text-gray-100">
                                         {!! formatear_urls($comentario->comentario) !!}
                                     </div>
                                     {{-- Botón eliminar comentario solo para el autor --}}

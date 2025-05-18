@@ -4,6 +4,21 @@
       x-init="init()"                              {{-- Inicializa tema al cargar --}}
       :class="{ 'dark': isDark }">                {{-- Aplica clase dark automáticamente --}}
 <head>
+    {{-- ANTI-FOUC: Script que aplica dark mode antes de cualquier CSS o JS --}}
+    <script>
+        // AÑADE la clase 'dark' al <html> antes de que se pinte el CSS, si así lo indica el usuario/preferencia
+        if (
+            localStorage.getItem('isDark') === 'true' ||
+            (
+                !('isDark' in localStorage) &&
+                window.matchMedia('(prefers-color-scheme: dark)').matches
+            )
+        ) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>[x-cloak] { display: none !important; }</style> {{-- Oculta elementos con x-cloak hasta Alpine esté listo --}}
