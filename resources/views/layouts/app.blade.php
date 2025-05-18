@@ -4,21 +4,6 @@
       x-init="init()"                              {{-- Inicializa tema al cargar --}}
       :class="{ 'dark': isDark }">                {{-- Aplica clase dark automáticamente --}}
 <head>
-    {{-- ANTI-FOUC: Script que aplica dark mode antes de cualquier CSS o JS --}}
-    <script>
-        // AÑADE la clase 'dark' al <html> antes de que se pinte el CSS, si así lo indica el usuario/preferencia
-        if (
-            localStorage.getItem('isDark') === 'true' ||
-            (
-                !('isDark' in localStorage) &&
-                window.matchMedia('(prefers-color-scheme: dark)').matches
-            )
-        ) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-    </script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>[x-cloak] { display: none !important; }</style> {{-- Oculta elementos con x-cloak hasta Alpine esté listo --}}
@@ -142,6 +127,12 @@
         const resultados = document.querySelector('#resultados');
         let indexSeleccionado = -1;
 
+        // Corrige el "hover pegado": al salir de la lista, resetea selección visual
+        resultados.addEventListener('mouseleave', function() {
+            indexSeleccionado = -1;
+            actualizarSeleccion(resultados.querySelectorAll('li'));
+        });
+
         async function buscarUsuarios(query) {
             const response = await fetch(`/buscar-usuarios?q=${encodeURIComponent(query)}`, {
                 headers: { 'X-Requested-With': 'XMLHttpRequest' },
@@ -151,9 +142,9 @@
             resultados.innerHTML = '';
 
             if (usuarios.length > 0) {
-                usuarios.forEach(user => {
+                usuarios.forEach((user, idx) => {
                     const li = document.createElement('li');
-                    li.classList = 'p-3 hover:bg-sky-100 cursor-pointer text-gray-700 dark:text-gray-200 flex items-center gap-3';
+                    li.classList = 'p-3 cursor-pointer text-gray-700 dark:text-gray-200 flex items-center gap-3 transition-colors hover:bg-sky-100 dark:hover:bg-sky-800';
                     li.innerHTML = `
                         <a href="/${user.username}" class="flex items-center gap-3 w-full h-full">
                             <img src="${user.imagen ? '/perfiles/' + user.imagen : '/img/usuario.svg'}" alt="avatar" class="w-8 h-8 rounded-full object-cover border border-gray-300" />
@@ -162,6 +153,16 @@
                             </div>
                         </a>
                     `;
+                    // Hover con el ratón: marca seleccionado
+                    li.addEventListener('mouseenter', function() {
+                        indexSeleccionado = idx;
+                        actualizarSeleccion(resultados.querySelectorAll('li'));
+                    });
+                    // Al salir del elemento, quita la selección (también gestionado por mouseleave en la lista)
+                    li.addEventListener('mouseleave', function() {
+                        indexSeleccionado = -1;
+                        actualizarSeleccion(resultados.querySelectorAll('li'));
+                    });
                     resultados.appendChild(li);
                 });
                 resultados.classList.remove('hidden');
@@ -194,7 +195,12 @@
         });
 
         function actualizarSeleccion(items) {
-            items.forEach((item, index) => item.classList.toggle('bg-sky-100', index === indexSeleccionado));
+            items.forEach((item, index) => {
+                item.classList.remove('bg-sky-100', 'dark:bg-sky-800', 'text-gray-900', 'dark:text-white');
+                if (index === indexSeleccionado) {
+                    item.classList.add('bg-sky-100', 'dark:bg-sky-800', 'text-gray-900', 'dark:text-white');
+                }
+            });
         }
 
         document.addEventListener('click', function (e) {
