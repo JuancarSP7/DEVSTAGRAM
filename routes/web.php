@@ -11,7 +11,7 @@ use App\Http\Controllers\LikeController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\RegisterController;
-use App\Http\Controllers\CodigoController; // ✅ Importamos el controlador de código
+use App\Http\Controllers\CodigoController;
 use Illuminate\Http\Request;
 use App\Models\User;
 
@@ -82,7 +82,7 @@ Route::get('/buscar-usuarios', function (Request $request) {
     return response()->json($usuarios);
 })->middleware('auth')->name('buscar.usuarios');
 
-// ✅ NUEVAS RUTAS para compartir y eliminar fragmentos de código
+// NUEVAS RUTAS para compartir y eliminar fragmentos de código
 
 // Almacenar código asociado a un post
 Route::post('/posts/{post}/codigo', [CodigoController::class, 'store'])
@@ -96,3 +96,30 @@ Route::delete('/codigo/{codigo}', [CodigoController::class, 'destroy'])
 
 // Perfil del usuario con listado de sus publicaciones
 Route::get('/{user:username}', [PostController::class,'index'])->name('post.index');
+
+/*
+|--------------------------------------------------------------------------
+| RUTA PARA CAMBIAR EL IDIOMA (Mejorada)
+|--------------------------------------------------------------------------
+| Permite cambiar entre 'es' (español) y 'en' (inglés).
+| Guarda el idioma en la sesión y redirige SIN caché a la página anterior
+| para asegurar que las vistas y los textos JS usan el idioma correcto.
+*/
+Route::get('/lang/{locale}', function ($locale) {
+    // Validar idiomas permitidos
+    if (!in_array($locale, ['es', 'en'])) {
+        abort(400); // Idioma no permitido, error 400
+    }
+
+    // Guardar el idioma en la sesión
+    session(['locale' => $locale]);
+
+    // Tomar la URL de donde viene el usuario
+    $referer = url()->previous();
+
+    // Redirigir a esa URL pero forzando que NO se use caché (importante para traducción instantánea JS)
+    return redirect($referer)->withHeaders([
+        'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
+        'Pragma'        => 'no-cache',
+    ]);
+})->name('lang.switch');

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('titulo')
-    Inicia sesion en DevStagram
+    {{ __('login.title') }}
 @endsection
 
 @section('contenido') 
@@ -22,16 +22,16 @@
                 @endif
 
                 <div class="mb-5">
-                    {{-- Label con texto adaptado a modo oscuro --}}
+                    {{-- Label internacionalizada --}}
                     <label for="email" class="mb-2 block uppercase text-gray-500 dark:text-gray-300 font-bold">
-                        Email
+                        {{ __('login.email_label') }}
                     </label>
-                    {{-- Input con fondo y texto adaptados a modo oscuro; mantiene borde rojo en errores --}}
+                    {{-- Input internacionalizado --}}
                     <input 
                         id="email" 
                         name="email" 
                         type="email" 
-                        placeholder="Tu Email de Registro" 
+                        placeholder="{{ __('login.email_placeholder') }}" 
                         class="border p-3 w-full rounded-lg 
                                @error('email') border-red-500 dark:border-red-500 @enderror
                                dark:bg-gray-700 dark:text-gray-100" 
@@ -45,16 +45,16 @@
                 </div>
 
                 <div class="mb-5">
-                    {{-- Label con texto adaptado a modo oscuro --}}
+                    {{-- Label internacionalizada --}}
                     <label for="password" class="mb-2 block uppercase text-gray-500 dark:text-gray-300 font-bold">
-                        Password
+                        {{ __('login.password_label') }}
                     </label>
-                    {{-- Input con fondo y texto adaptados a modo oscuro; mantiene borde rojo en errores --}}
+                    {{-- Input internacionalizado --}}
                     <input 
                         id="password" 
                         name="password" 
                         type="password" 
-                        placeholder="Password de Registro" 
+                        placeholder="{{ __('login.password_placeholder') }}" 
                         class="border p-3 w-full rounded-lg 
                                @error('password') border-red-500 dark:border-red-500 @enderror
                                dark:bg-gray-700 dark:text-gray-100" 
@@ -67,20 +67,34 @@
                 </div>
 
                 <div class="mb-5">
-                    {{-- Checkbox estilizado para modo oscuro --}}
+                    {{-- Checkbox estilizado e internacionalizado --}}
                     <input type="checkbox" name="remember" class="accent-sky-600" />
                     <label for="recordar" class="text-gray-500 dark:text-gray-300 text-sm">
-                        Mantener mi sesión abierta
+                        {{ __('login.remember_me') }}
                     </label>
                 </div>
 
-                {{-- Botón de envío (queda igual pues ya contraste bien en oscuro) --}}
+                {{-- Botón de envío internacionalizado --}}
                 <input 
                     type="submit" 
-                    value="Iniciar sesión" 
+                    value="{{ __('login.login_button') }}" 
                     class="bg-sky-600 hover:bg-sky-700 transition-colors cursor-pointer uppercase font-bold w-full p-3 text-white rounded-lg" 
                 />
             </form>
+
+            {{-- Links alternativos (opcional) --}}
+            <div class="mt-6 text-center">
+                <a href="#" class="text-sky-600 hover:underline text-sm">
+                    {{ __('login.forgot_password') }}
+                </a>
+                <br>
+                <span class="text-gray-500 dark:text-gray-300 text-sm">
+                    {{ __('login.no_account') }}
+                </span>
+                <a href="{{ route('register') }}" class="ml-1 text-sky-600 hover:underline text-sm font-bold">
+                    {{ __('login.signup') }}
+                </a>
+            </div>
         </div>
     </div>
 @endsection

@@ -6,12 +6,12 @@
             @foreach ($posts as $post)
                 <div>
                     <a href="{{ route('posts.show', ['user' => $post->user->username, 'post' => $post->id]) }}">
-                        <img src="{{ asset('uploads') . '/' . $post->imagen }}" alt="Imagen del post {{ $post->titulo }}" />
+                        <img src="{{ asset('uploads') . '/' . $post->imagen }}" alt="@lang('listar_post.imagen_alt', ['titulo' => $post->titulo])" />
                     </a>
 
                     @if ($mostrarInfoAutor)
                         <p class="text-gray-600 text-sm mt-2 text-center">
-                            Publicado por:
+                            @lang('listar_post.publicado_por')
                             <a href="{{ route('post.index', $post->user) }}" class="text-blue-600 hover:underline">
                                 {{ $post->user->username }}
                             </a>
@@ -26,7 +26,7 @@
         </div>
     @else
         <p class="text-gray-600 uppercase text-sm text-center font-bold">
-            No hay publicaciones, sigue a tu DevStagramer favorito para poder ver sus posts
+            @lang('listar_post.no_publicaciones')
         </p>
     @endif
 </div>

@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
 @section('titulo')
-    Regístrate en DevStagram
+    {{ __('register.title') }}
 @endsection
 
 @section('contenido') 
     <div class="md:flex md:justify-center md:gap-10 md:items-center">
         <div class="md:w-6/12 p-5">
-            <img src="{{ asset('img/registrar.jpg') }}" alt="Imagen de registro de usuario" class="rounded-lg shadow-xl">
+            <img src="{{ asset('img/registrar.jpg') }}" alt="{{ __('register.image_alt') }}" class="rounded-lg shadow-xl">
         </div>
 
         {{-- Contenedor principal con soporte para modo claro/oscuro --}}
@@ -16,16 +16,14 @@
                 @csrf   {{-- Token CSRF para seguridad --}}
 
                 <div class="mb-5">
-                    {{-- Label adaptado a modo oscuro --}}
                     <label for="name" class="mb-2 block uppercase text-gray-500 dark:text-gray-300 font-bold">
-                        Nombre
+                        {{ __('register.name_label') }}
                     </label>
-                    {{-- Input con fondo y texto para modo oscuro; borde rojo en errores --}}
                     <input 
                         id="name" 
                         name="name" 
                         type="text" 
-                        placeholder="Tu nombre" 
+                        placeholder="{{ __('register.name_placeholder') }}" 
                         class="border p-3 w-full rounded-lg 
                                @error('name') border-red-500 dark:border-red-500 @enderror
                                dark:bg-gray-700 dark:text-gray-100" 
@@ -39,16 +37,14 @@
                 </div>
 
                 <div class="mb-5">
-                    {{-- Label adaptado a modo oscuro --}}
                     <label for="username" class="mb-2 block uppercase text-gray-500 dark:text-gray-300 font-bold">
-                        Username
+                        {{ __('register.username_label') }}
                     </label>
-                    {{-- Input con fondo y texto para modo oscuro; borde rojo en errores --}}
                     <input 
                         id="username" 
                         name="username" 
                         type="text" 
-                        placeholder="Tu Nombre de Usuario" 
+                        placeholder="{{ __('register.username_placeholder') }}" 
                         class="border p-3 w-full rounded-lg 
                                @error('username') border-red-500 dark:border-red-500 @enderror
                                dark:bg-gray-700 dark:text-gray-100" 
@@ -62,16 +58,14 @@
                 </div>
 
                 <div class="mb-5">
-                    {{-- Label adaptado a modo oscuro --}}
                     <label for="email" class="mb-2 block uppercase text-gray-500 dark:text-gray-300 font-bold">
-                        Email
+                        {{ __('register.email_label') }}
                     </label>
-                    {{-- Input con fondo y texto para modo oscuro; borde rojo en errores --}}
                     <input 
                         id="email" 
                         name="email" 
                         type="email" 
-                        placeholder="Tu Email de Registro" 
+                        placeholder="{{ __('register.email_placeholder') }}" 
                         class="border p-3 w-full rounded-lg 
                                @error('email') border-red-500 dark:border-red-500 @enderror
                                dark:bg-gray-700 dark:text-gray-100" 
@@ -85,16 +79,14 @@
                 </div>
 
                 <div class="mb-5">
-                    {{-- Label adaptado a modo oscuro --}}
                     <label for="password" class="mb-2 block uppercase text-gray-500 dark:text-gray-300 font-bold">
-                        Password
+                        {{ __('register.password_label') }}
                     </label>
-                    {{-- Input con fondo y texto para modo oscuro; borde rojo en errores --}}
                     <input 
                         id="password" 
                         name="password" 
                         type="password" 
-                        placeholder="Password de Registro" 
+                        placeholder="{{ __('register.password_placeholder') }}" 
                         class="border p-3 w-full rounded-lg 
                                @error('password') border-red-500 dark:border-red-500 @enderror
                                dark:bg-gray-700 dark:text-gray-100" 
@@ -107,25 +99,23 @@
                 </div>
 
                 <div class="mb-5">
-                    {{-- Label adaptado a modo oscuro --}}
                     <label for="password_confirmation" class="mb-2 block uppercase text-gray-500 dark:text-gray-300 font-bold">
-                        Repetir Password
+                        {{ __('register.password_confirmation_label') }}
                     </label>
-                    {{-- Input con fondo y texto para modo oscuro --}}
                     <input 
                         id="password_confirmation" 
                         name="password_confirmation" 
                         type="password" 
-                        placeholder="Repite tu Password" 
+                        placeholder="{{ __('register.password_confirmation_placeholder') }}" 
                         class="border p-3 w-full rounded-lg 
                                dark:bg-gray-700 dark:text-gray-100" 
                     />
                 </div>
 
-                {{-- Botón de envío: ya tiene buen contraste en modo oscuro --}}
+                {{-- Botón de envío --}}
                 <input 
                     type="submit" 
-                    value="Crear Cuenta" 
+                    value="{{ __('register.button') }}" 
                     class="bg-sky-600 hover:bg-sky-700 transition-colors cursor-pointer uppercase font-bold w-full p-3 text-white rounded-lg" 
                 />
             </form>

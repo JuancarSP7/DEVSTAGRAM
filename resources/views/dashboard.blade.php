@@ -1,7 +1,8 @@
 @extends('layouts.app')
 
 @section('titulo')
-    Perfil: {{ $user->username }}
+    {{-- Título traducido: Perfil de... --}}
+    @lang('dashboard.perfil'): {{ $user->username }}
 @endsection
 
 @section('contenido')
@@ -23,7 +24,6 @@
         <div class="md:w-8/12 lg:w-6/12 px-5 flex flex-col md:justify-center items-center md:items-start py-10">
             {{-- Nombre y botón editar si soy yo --}}
             <div class="flex items-center gap-2">
-                {{-- Nombre adaptado a modo oscuro --}}
                 <p class="text-gray-700 dark:text-gray-100 text-2xl">{{ $user->username }}</p>
                 @auth
                     @if ($user->id === auth()->user()->id)
@@ -31,6 +31,7 @@
                             href="{{ route('perfil.index') }}"
                             class="text-gray-500 dark:text-gray-300 hover:text-gray-600 dark:hover:text-gray-200 cursor-pointer"
                         >
+                            {{-- Icono editar --}}
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4">
                                 <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z" />
                             </svg>
@@ -39,14 +40,14 @@
                 @endauth
             </div>
 
-            {{-- Seguidores (texto y color adaptados) --}}
+            {{-- Seguidores (traducido y adaptado a plural/singular) --}}
             <p 
                 class="text-sm font-bold mt-5 cursor-pointer text-gray-800 dark:text-gray-200"
                 onclick="abrirModal('seguidores')"
             >
                 {{ $user->followers->count() }}
-                <span class="text-blue-600 font-normal hover:underline">  
-                    @choice('Seguidor|Seguidores', $user->followers->count())
+                <span class="text-blue-600 font-normal hover:underline">
+                    @lang('dashboard.seguidores')
                 </span>
             </p>
 
@@ -56,13 +57,15 @@
                 onclick="abrirModal('seguidos')"
             >
                 {{ $user->followings->count() }}
-                <span class="text-blue-600 font-normal hover:underline">Siguiendo</span>
+                <span class="text-blue-600 font-normal hover:underline">
+                    @lang('dashboard.siguiendo')
+                </span>
             </p>
 
             {{-- Total de publicaciones --}}
             <p class="text-gray-800 dark:text-gray-200 text-sm font-bold">
                 {{ $user->posts->count() }}
-                <span class="font-normal">Posts</span>
+                <span class="font-normal">@lang('dashboard.posts')</span>
             </p>
 
             {{-- Botón de seguir o dejar de seguir --}}
@@ -73,7 +76,7 @@
                             @csrf
                             <input 
                                 type="submit" 
-                                value="Seguir"
+                                value="@lang('dashboard.seguir')"
                                 class="bg-blue-600 text-white rounded-lg px-3 py-1 cursor-pointer hover:bg-blue-700 font-bold uppercase text-xs"
                             />
                         </form>
@@ -83,7 +86,7 @@
                             @method('DELETE')
                             <input 
                                 type="submit" 
-                                value="Dejar de Seguir"
+                                value="@lang('dashboard.dejar_seguir')"
                                 class="bg-red-600 text-white rounded-lg px-3 py-1 cursor-pointer hover:bg-red-700 font-bold uppercase text-xs"
                             />
                         </form>
@@ -104,10 +107,9 @@
                     onclick="cerrarModal()" 
                     class="mt-4 w-full text-center text-red-500 font-semibold hover:text-red-700"
                 >
-                    Cerrar
+                    @lang('dashboard.cerrar')
                 </button>
             </div>
-
         </div>
     </div>
 </div>
@@ -115,16 +117,21 @@
 {{-- Sección de publicaciones del usuario --}}
 <section class="container mx-auto mt-10">
     {{-- Título con modo oscuro --}}
-    <h2 class="text-4xl text-center font-black my-10 dark:text-gray-100">Publicaciones</h2>
+    <h2 class="text-4xl text-center font-black my-10 dark:text-gray-100">
+        @lang('dashboard.publicaciones')
+    </h2>
     <x-listar-post :posts="$posts" />
 </section>
 
-{{-- Script para cargar el contenido y mostrar el modal con animación --}}
+{{-- Script para cargar el contenido y mostrar el modal con animación y textos traducidos --}}
 <script>
     function abrirModal(tipo) {
         const username = @json($user->username);
+        // Traduce el título usando las claves de traducción que vienen del backend (embed en el script)
+        const titulo = tipo === 'seguidores'
+            ? @json(__('dashboard.seguidores'))
+            : @json(__('dashboard.siguiendo'));
         const url = `/${username}/${tipo}`;
-        const titulo = tipo === 'seguidores' ? 'Seguidores' : 'Siguiendo';
 
         fetch(url)
             .then(res => res.json())
@@ -134,7 +141,7 @@
                 lista.innerHTML = '';
 
                 if (data.length === 0) {
-                    lista.innerHTML = '<li class="text-gray-500 dark:text-gray-400 text-sm">No hay usuarios</li>';
+                    lista.innerHTML = `<li class="text-gray-500 dark:text-gray-400 text-sm">@lang('dashboard.no_usuarios')</li>`;
                 }
 
                 data.forEach(usuario => {

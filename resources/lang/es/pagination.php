@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 declare(strict_types=1);
 
@@ -6,16 +6,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Paginación Líneas de lenguaje
+    | Líneas de idioma para paginación
     |--------------------------------------------------------------------------
     |
-    | Las siguientes lineas de paginación son usadas para los enlaces de paginación.
-    | Eres libre de cambiarlos a lo que quieras.
-    | Si se te ocurre algo más emocionante, háznoslo saber.
+    | Estos mensajes se usan en los enlaces de paginación generados por Laravel.
+    | Puedes personalizarlos según el estilo de tu aplicación.
     |
     */
 
-    'previous' => '&laquo; Anterior',
-    'next'     => 'Siguiente &raquo;',
+    'previous' => '&laquo; Anterior', // Enlace a la página anterior
+    'next'     => 'Siguiente &raquo;', // Enlace a la página siguiente
 
+    // Opcionales: puedes agregarlos si usas paginación avanzada
+    'first'    => 'Primera',   // Enlace a la primera página
+    'last'     => 'Última',    // Enlace a la última página
+    'goto'     => 'Ir a la página :page', // Texto para navegación directa
 ];
