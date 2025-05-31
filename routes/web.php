@@ -14,6 +14,12 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\CodigoController;
 use Illuminate\Http\Request;
 use App\Models\User;
+// 👉 Añade el controlador para la baja:
+use App\Http\Controllers\DeleteAccountController;
+
+// 👉 Añade los controladores de recuperación de contraseña:
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,32 +45,50 @@ Route::post('/logout', [LogoutController::class,'store'])->name('logout'); // Ci
 Route::get('/editar-perfil', [PerfilController::class,'index'])->name('perfil.index'); // Formulario edición
 Route::post('/editar-perfil', [PerfilController::class,'store'])->name('perfil.store'); // Guarda cambios
 
+// 👉 RUTAS DARSE DE BAJA (nueva funcionalidad)
+Route::get('/perfil/baja', [DeleteAccountController::class, 'show'])
+    ->middleware('auth')->name('perfil.baja'); // Mostrar confirmación de baja
+Route::delete('/perfil/baja', [DeleteAccountController::class, 'destroy'])
+    ->middleware('auth')->name('perfil.baja.destroy'); // Procesar baja y borrar cuenta
+
+// 👉 RECUPERACIÓN DE CONTRASEÑA (Password Reset)
+Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])
+    ->middleware('guest')->name('password.request'); // Formulario de email
+Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])
+    ->middleware('guest')->name('password.email'); // Envía el email
+Route::get('/reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])
+    ->middleware('guest')->name('password.reset'); // Formulario para nueva password
+Route::post('/reset-password', [ResetPasswordController::class, 'reset'])
+    ->middleware('guest')->name('password.update'); // Actualiza la password
+
 // Crear y ver posts
-Route::get('/posts/create', [PostController::class,'create'])->name('posts.create'); // Formulario nuevo post
-Route::post('/posts', [PostController::class,'store'])->name('posts.store');         // Guarda post
-Route::get('/{user:username}/posts/{post}', [PostController::class,'show'])->name('posts.show'); // Ver detalle
-Route::delete('/posts/{post}', [PostController::class,'destroy'])->name('posts.destroy');       // Eliminar post
+Route::get('/posts/create', [PostController::class,'create'])->middleware('auth')->name('posts.create'); // Formulario nuevo post
+Route::post('/posts', [PostController::class,'store'])->middleware('auth')->name('posts.store');         // Guarda post
+
+// Protege la ruta de detalle del post
+Route::get('/{user:username}/posts/{post}', [PostController::class,'show'])->middleware('auth')->name('posts.show'); // Ver detalle
+Route::delete('/posts/{post}', [PostController::class,'destroy'])->middleware('auth')->name('posts.destroy');       // Eliminar post
 
 // Comentar un post
-Route::post('/{user:username}/posts/{post}', [ComentarioController::class,'store'])->name('comentarios.store'); // Añadir comentario
+Route::post('/{user:username}/posts/{post}', [ComentarioController::class,'store'])->middleware('auth')->name('comentarios.store'); // Añadir comentario
 
 // 🔥 NUEVA RUTA: Eliminar comentario (requiere método destroy y política)
-Route::delete('/comentarios/{comentario}', [ComentarioController::class, 'destroy'])->name('comentarios.destroy');
+Route::delete('/comentarios/{comentario}', [ComentarioController::class, 'destroy'])->middleware('auth')->name('comentarios.destroy');
 
 // Subida de imágenes desde el editor de post (Dropzone)
-Route::post('/imagenes', [ImagenController::class,'store'])->name('imagenes.store');
+Route::post('/imagenes', [ImagenController::class,'store'])->middleware('auth')->name('imagenes.store');
 
 // Likes a los posts
-Route::post('/posts/{post}/likes', [LikeController::class,'store'])->name('posts.likes.store');
-Route::delete('/posts/{post}/likes', [LikeController::class,'destroy'])->name('posts.likes.destroy');
+Route::post('/posts/{post}/likes', [LikeController::class,'store'])->middleware('auth')->name('posts.likes.store');
+Route::delete('/posts/{post}/likes', [LikeController::class,'destroy'])->middleware('auth')->name('posts.likes.destroy');
 
 // Seguir y dejar de seguir a un usuario
-Route::post('/{user:username}/follow', [FollowerController::class, 'store'])->name('users.follow');
-Route::delete('/{user:username}/unfollow', [FollowerController::class, 'destroy'])->name('users.unfollow');
+Route::post('/{user:username}/follow', [FollowerController::class, 'store'])->middleware('auth')->name('users.follow');
+Route::delete('/{user:username}/unfollow', [FollowerController::class, 'destroy'])->middleware('auth')->name('users.unfollow');
 
 // 🔥 NUEVAS RUTAS: obtener seguidores y seguidos como JSON para modales
-Route::get('/{user:username}/seguidores', [FollowerController::class, 'seguidores'])->name('users.seguidores');
-Route::get('/{user:username}/seguidos', [FollowerController::class, 'seguidos'])->name('users.seguidos');
+Route::get('/{user:username}/seguidores', [FollowerController::class, 'seguidores'])->middleware('auth')->name('users.seguidores');
+Route::get('/{user:username}/seguidos', [FollowerController::class, 'seguidos'])->middleware('auth')->name('users.seguidos');
 
 // Búsqueda de usuarios para el autocompletado en el header
 Route::get('/buscar-usuarios', function (Request $request) {
@@ -95,7 +119,7 @@ Route::delete('/codigo/{codigo}', [CodigoController::class, 'destroy'])
     ->middleware('auth');
 
 // Perfil del usuario con listado de sus publicaciones
-Route::get('/{user:username}', [PostController::class,'index'])->name('post.index');
+Route::get('/{user:username}', [PostController::class,'index'])->middleware('auth')->name('post.index');
 
 /*
 |--------------------------------------------------------------------------

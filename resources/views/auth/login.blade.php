@@ -15,18 +15,18 @@
             <form method="POST" action="{{ route('login') }}" novalidate>
                 @csrf
 
+                {{-- Mensaje de error (si existe) --}}
                 @if(session('mensaje'))
                     <p class="bg-red-500 text-white my-2 rounded-lg text-sm p-2 text-center">
                         {{ session('mensaje') }}
                     </p>
                 @endif
 
+                {{-- Campo EMAIL --}}
                 <div class="mb-5">
-                    {{-- Label internacionalizada --}}
                     <label for="email" class="mb-2 block uppercase text-gray-500 dark:text-gray-300 font-bold">
                         {{ __('login.email_label') }}
                     </label>
-                    {{-- Input internacionalizado --}}
                     <input 
                         id="email" 
                         name="email" 
@@ -44,12 +44,11 @@
                     @enderror
                 </div>
 
+                {{-- Campo PASSWORD --}}
                 <div class="mb-5">
-                    {{-- Label internacionalizada --}}
                     <label for="password" class="mb-2 block uppercase text-gray-500 dark:text-gray-300 font-bold">
                         {{ __('login.password_label') }}
                     </label>
-                    {{-- Input internacionalizado --}}
                     <input 
                         id="password" 
                         name="password" 
@@ -66,15 +65,15 @@
                     @enderror
                 </div>
 
+                {{-- Recordarme --}}
                 <div class="mb-5">
-                    {{-- Checkbox estilizado e internacionalizado --}}
-                    <input type="checkbox" name="remember" class="accent-sky-600" />
+                    <input type="checkbox" name="remember" class="accent-sky-600" id="recordar" />
                     <label for="recordar" class="text-gray-500 dark:text-gray-300 text-sm">
                         {{ __('login.remember_me') }}
                     </label>
                 </div>
 
-                {{-- Botón de envío internacionalizado --}}
+                {{-- Botón de envío --}}
                 <input 
                     type="submit" 
                     value="{{ __('login.login_button') }}" 
@@ -82,12 +81,15 @@
                 />
             </form>
 
-            {{-- Links alternativos (opcional) --}}
-            <div class="mt-6 text-center">
-                <a href="#" class="text-sky-600 hover:underline text-sm">
+            {{-- Enlace para recuperar contraseña --}}
+            <div class="mt-4 text-right">
+                <a href="{{ route('password.request') }}" class="text-sky-600 hover:underline text-sm font-medium">
                     {{ __('login.forgot_password') }}
                 </a>
-                <br>
+            </div>
+
+            {{-- Links alternativos --}}
+            <div class="mt-6 text-center">
                 <span class="text-gray-500 dark:text-gray-300 text-sm">
                     {{ __('login.no_account') }}
                 </span>

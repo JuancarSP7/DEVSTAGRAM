@@ -2,28 +2,22 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
+// Importa los modelos necesarios
+use App\Models\Post;
+use App\Models\Like;
+use App\Models\Comentario;
+use App\Models\Codigo;
+
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-
-    //$fillable van a ser los datos que esperamos que el usuario nos envíe y que se van a guardar en la base de datos(es una medida extr de seguridad)
-    //en este caso son los datos que se envían desde el formulario de registro
-    //en el archivo register.blade.php
-    //en el archivo RegisterController.php se valida que los datos sean correctos
-    //si los datos son correctos, se guardan en la base de datos
-    //en el archivo User.php se definen los datos que se van a guardar en la base de datos
+    // Datos que se pueden asignar masivamente
     protected $fillable = [
         'name',
         'username',
@@ -31,55 +25,63 @@ class User extends Authenticatable
         'password'
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
+    // Oculta estos campos en arrays/json
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
+    // Casts de tipos
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
 
-    //relacion uno a muchos donde un usuario puede tener varios posts
+    /**
+     * Un usuario tiene muchos posts.
+     */
     public function posts(){
-        
-        return $this->hasMany(Post::class); //le pasamos x parametros el modelo con el que se relaciona "Post"
+        return $this->hasMany(Post::class);
     }
 
+    /**
+     * Un usuario tiene muchos likes.
+     */
     public function likes(){
-        
-        return $this->hasMany(Like::class); //le pasamos x parametros el modelo con el que se relaciona "Like"
-        //hasMany porque un usuario puede tener muchos likes
+        return $this->hasMany(Like::class);
     }
 
-    //metodo que almacena los seguidores de un usuario
+    /**
+     * Un usuario tiene muchos comentarios.
+     */
+    public function comentarios() {
+        return $this->hasMany(Comentario::class);
+    }
+
+    /**
+     * Un usuario tiene muchos fragmentos de código.
+     */
+    public function codigos() {
+        return $this->hasMany(Codigo::class);
+    }
+
+    /**
+     * Seguidores de este usuario.
+     */
     public function followers(){
-        //le pasamos x parametros el modelo con el que se relaciona "User", la tabla intermedia "followers", el id del usuario y el id del seguidor
-        return $this->belongsToMany(User::class, 'followers', 'user_id', 'follower_id'); 
+        return $this->belongsToMany(User::class, 'followers', 'user_id', 'follower_id');
     }
 
-    //Almacenar los usuarios a los que seguimos
+    /**
+     * Usuarios a los que sigue este usuario.
+     */
     public function followings(){
-        //le pasamos x parametros el modelo con el que se relaciona "User", la tabla intermedia "followers", el id del follower y el id del usuario
-        return $this->belongsToMany(User::class, 'followers', 'follower_id', 'user_id'); 
+        return $this->belongsToMany(User::class, 'followers', 'follower_id', 'user_id');
     }
 
-
-    //Comprobar si un usuario ya sigue a otro usuario
+    /**
+     * Comprobar si ya sigue a otro usuario.
+     */
     public function siguiendo(User $user){
-        //si el id del usuario autenticado es igual al id del seguidor
-        return $this->followers->contains($user->id); //devuelve true o false
+        return $this->followers->contains($user->id);
     }
-
-
 }

@@ -67,13 +67,25 @@
                     </div>
                 </div>
 
-                {{-- Botón de envío --}}
+                {{-- Botón de envío (guardar cambios) --}}
                 <input 
                     type="submit" 
                     value="@lang('index.guardar')" 
                     class="bg-sky-600 hover:bg-sky-700 transition-colors cursor-pointer uppercase font-bold w-full p-3 text-white rounded-lg" 
                 />
             </form>
+
+            {{-- Botón para darse de baja: igual que el de guardar cambios, pero en rojo y en mayúsculas --}}
+            <div class="mt-10">
+                <a href="{{ route('perfil.baja') }}"
+                   class="w-full block bg-red-600 hover:bg-red-700 transition-colors cursor-pointer uppercase font-bold p-3 text-white rounded-lg text-center"
+                >
+                    DARSE DE BAJA
+                </a>
+                <p class="text-s text-gray-400 mt-2 text-center">
+                    Esta opción eliminará permanentemente tu cuenta, publicaciones y comentarios.
+                </p>
+            </div>
         </div>
     </div>
 @endsection

@@ -177,8 +177,10 @@
             maxFilesize: 2,           // MB
             acceptedFiles: 'image/*',
             init: function () {
+                // ========== AÑADIDO CLAVE: GUARDAR EL NOMBRE DE LA IMAGEN SUBIDA ==========
                 this.on("success", function(file, response) {
-                    // Toast de éxito opcional
+                    // Al recibir la respuesta del backend (nombre de la imagen), la guardamos en el input oculto
+                    document.querySelector('input[name="imagen"]').value = response.imagen;
                 });
                 this.on("error", function(file, message) {
                     // Toast de error opcional

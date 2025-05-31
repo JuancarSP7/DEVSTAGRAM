@@ -6,6 +6,9 @@ use App\Models\Post;
 use App\Models\User;
 use App\Models\Comentario;
 use Illuminate\Http\Request;
+// 👇 Importa el Mailable y Mail
+use App\Mail\NewCommentOrCodeMail;
+use Illuminate\Support\Facades\Mail;
 
 class ComentarioController extends Controller
 {
@@ -20,11 +23,18 @@ class ComentarioController extends Controller
         ]);
 
         // Crear el comentario asociado al usuario autenticado y al post
-        Comentario::create([
+        $comentario = Comentario::create([
             'user_id' => auth()->user()->id,
             'post_id' => $post->id,
             'comentario' => $request->comentario,
         ]);
+
+        // ENVIAR CORREO AL AUTOR DEL POST NOTIFICANDO EL NUEVO COMENTARIO
+        // Solo se envía si el autor del post NO es el mismo usuario que comenta (para evitar autocorreo)
+        if ($post->user_id !== auth()->id()) {
+            Mail::to($post->user->email)
+                ->send(new NewCommentOrCodeMail($post, auth()->user(), 'comentario'));
+        }
 
         // Redirigir de vuelta al post con un mensaje de éxito
         return back()->with('mensaje', 'Comentario enviado correctamente');

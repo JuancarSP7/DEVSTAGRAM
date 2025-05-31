@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+// Importación añadida para enviar correo de bienvenida
+use App\Mail\WelcomeMail;
+use Illuminate\Support\Facades\Mail;
 
 class RegisterController extends Controller {
     public function index() {   //creamos el método llamado index
@@ -32,12 +35,16 @@ class RegisterController extends Controller {
         //el método confirmed() se encarga de verificar que la contraseña y la confirmación de la contraseña sean iguales
         //el método validate() se encarga de validar los datos del formulario
         //el método request() se encarga de obtener los datos del formulario
-        User::create([
+        $user = User::create([
             'name' => $request->name,   //guardamos el campo nombre del archivo register.blade.php
             'username' => $request->username,   //guardamos el campo usuario del archivo register.blade.php
             'email' => $request->email, //guardamos el campo email del archivo register.blade.php
             'password' => bcrypt($request->password) //encriptamos el campo password del archivo register.blade.php
         ]);
+
+        // ENVIAR CORREO DE BIENVENIDA AL USUARIO (mejora solicitada)
+        // Usamos el Mailable WelcomeMail y enviamos el nombre de usuario
+        Mail::to($user->email)->send(new WelcomeMail($user->username));
 
         //AUTENTICAR AL USUARIO
         //auth()->attempt([ //intentamos autenticar al usuario
