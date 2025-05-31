@@ -1,0 +1,22 @@
+<?php
+return [
+    'post_image_alt' => 'Post image :title',
+    'delete_post' => 'Delete Post',
+    'add_new_comment' => 'Add a New Comment',
+    'add_comment_label' => 'Add a Comment',
+    'add_comment_placeholder' => 'Add a Comment',
+    'comment_button' => 'Comment',
+    'comments' => 'Comments',
+    'delete_comment' => 'Delete Comment',
+    'no_comments' => 'Be the first to comment.',
+    'share_code' => 'Share your Code',
+    'indicate_language' => 'Indicate your Language',
+    'code' => 'Code',
+    'code_placeholder' => 'Write your code here...',
+    'share_code_button' => 'Share Code',
+    'shared_codes' => 'Shared Codes',
+    'language' => 'Language',
+    'view_code' => 'View Code',
+    'delete_code' => 'Delete Code',
+    'others' => 'Others',
+];

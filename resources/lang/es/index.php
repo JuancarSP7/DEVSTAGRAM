@@ -10,4 +10,9 @@ return [
     'imagen'           => 'Imagen de Perfil',
     'seleccionar'      => 'Seleccionar archivo',
     'ninguno'          => 'Ningún archivo seleccionado',
+
+    'darse_baja'              => 'DARSE DE BAJA',
+    // Nueva clave para el aviso bajo el botón
+    'aviso_baja'              => 'Esta opción eliminará permanentemente tu cuenta, publicaciones y comentarios.',
+
 ];

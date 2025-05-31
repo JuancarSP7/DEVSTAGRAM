@@ -8,11 +8,10 @@
     {{-- ============================= --}}
     {{-- TOAST DE ÉXITO FLOTANTE       --}}
     {{-- ============================= --}}
-    {{-- Mostramos un mensaje flotante si existe una sesión 'mensaje' --}}
     @if (session('mensaje'))
         <div 
             x-data="{ show: true }"
-            x-init="setTimeout(() => show = false, 2000)" {{-- Oculta tras 2 segundos --}}
+            x-init="setTimeout(() => show = false, 2000)"
             x-show="show"
             x-transition:enter="transition ease-out duration-300"
             x-transition:enter-start="opacity-0 -translate-y-2"
@@ -37,7 +36,8 @@
     <div class="md:flex items-start">
         {{-- Columna izquierda: imagen y post --}}
         <div class="md:w-1/2 flex-shrink-0">
-            <img src="{{ asset('uploads') . '/' . $post->imagen }}" alt="Imagen del post {{ $post->titulo }}">
+            <img src="{{ asset('uploads') . '/' . $post->imagen }}" alt="@lang('posts.post_image_alt', ['title' => $post->titulo])">
+
             {{-- Likes y botón de like --}}
             <div class="p-3 flex items-center gap-4">
                 @auth
@@ -56,7 +56,7 @@
                         @method('DELETE')
                         <input 
                             type="submit" 
-                            value="Eliminar Publicación"
+                            value="@lang('posts.delete_post')"
                             class="bg-red-500 hover:bg-red-600 p-2 rounded text-white font-bold mt-4 cursor-pointer" 
                         />
                     </form>
@@ -70,19 +70,19 @@
                 @auth
                     {{-- Título Nuevo Comentario --}}
                     <p class="text-xl font-bold text-center mb-4 dark:text-gray-100">
-                        Agrega un Nuevo Comentario
+                        @lang('posts.add_new_comment')
                     </p>
                     {{-- Formulario Comentario --}}
                     <form action="{{ route('comentarios.store', ['post' => $post, 'user' => $user]) }}" method="POST">
                         @csrf
                         <div class="mb-5">
                             <label for="comentario" class="mb-2 block uppercase text-gray-500 dark:text-gray-300 font-bold">
-                                Añade un Comentario
+                                @lang('posts.add_comment_label')
                             </label>
                             <textarea
                                 id="comentario"
                                 name="comentario"
-                                placeholder="Agrega un Comentario"
+                                placeholder="@lang('posts.add_comment_placeholder')"
                                 class="border p-3 w-full rounded-lg 
                                        @error('comentario') border-red-500 dark:border-red-500 @enderror
                                        dark:bg-gray-700 dark:text-gray-100"
@@ -95,7 +95,7 @@
                         </div>
                         <input 
                             type="submit"
-                            value="Comentar"
+                            value="@lang('posts.comment_button')"
                             class="bg-sky-600 hover:bg-sky-700 transition-colors cursor-pointer uppercase font-bold w-full p-3 text-white rounded-lg"
                         />
                     </form>
@@ -103,7 +103,7 @@
                     {{-- LISTADO DE COMENTARIOS DE ESTE POST --}}
                     @if($post->comentarios->count())
                         <div class="mb-6">
-                            <h3 class="text-lg font-bold mb-3 dark:text-gray-100">Comentarios</h3>
+                            <h3 class="text-lg font-bold mb-3 dark:text-gray-100">@lang('posts.comments')</h3>
                             <ul>
                                 @foreach ($post->comentarios()->latest()->get() as $comentario)
                                     <li class="mb-3 border-b border-gray-200 dark:border-gray-600 pb-2">
@@ -120,7 +120,7 @@
                                                 @csrf
                                                 @method('DELETE')
                                                 <button class="bg-red-500 hover:bg-red-600 text-white text-xs px-2 py-1 rounded">
-                                                    Eliminar Comentario
+                                                    @lang('posts.delete_comment')
                                                 </button>
                                             </form>
                                         @endif
@@ -129,19 +129,19 @@
                             </ul>
                         </div>
                     @else
-                        <p class="mb-6 text-sm text-gray-500 dark:text-gray-400">Sé el primero en comentar.</p>
+                        <p class="mb-6 text-sm text-gray-500 dark:text-gray-400">@lang('posts.no_comments')</p>
                     @endif
 
                     <hr class="border-gray-200 dark:border-gray-600 my-6">
 
                     <p class="text-xl font-bold text-center mb-4 dark:text-gray-100">
-                        Comparte tu Código
+                        @lang('posts.share_code')
                     </p>
                     {{-- Formulario Compartir Código --}}
                     <form action="{{ route('codigos.store', $post) }}" method="POST">
                         @csrf
                         <label for="lenguaje" class="block uppercase text-gray-500 dark:text-gray-300 font-bold mb-2">
-                            Indica tu Lenguaje
+                            @lang('posts.indicate_language')
                         </label>
                         <select
                             name="lenguaje"
@@ -157,10 +157,10 @@
                             <option value="PHP">PHP</option>
                             <option value="C">C</option>
                             <option value="Cobol">Cobol</option>
-                            <option value="Otros">Otros</option>
+                            <option value="Otros">@lang('posts.others')</option>
                         </select>
                         <label for="codigo" class="block uppercase text-gray-500 dark:text-gray-300 font-bold mb-2">
-                            Código
+                            @lang('posts.code')
                         </label>
                         <textarea
                             id="codigo"
@@ -169,7 +169,7 @@
                             rows="6"
                             class="w-full bg-black text-white font-mono text-xs p-3 rounded resize-none
                                    @error('codigo') border-red-500 @enderror"
-                            placeholder="Escribe tu código aquí..."
+                            placeholder="@lang('posts.code_placeholder')"
                         ></textarea>
                         @error('codigo')
                             <p class="bg-red-500 text-white my-2 rounded-lg text-sm p-2 text-center">
@@ -180,24 +180,24 @@
                             type="submit"
                             class="bg-sky-600 hover:bg-sky-700 mt-4 transition-colors cursor-pointer uppercase font-bold w-full p-3 text-white rounded-lg"
                         >
-                            Compartir Código
+                            @lang('posts.share_code_button')
                         </button>
                     </form>
 
                     <hr class="border-gray-200 dark:border-gray-600 my-6">
 
                     <h3 class="text-xl font-bold text-center mb-4 dark:text-gray-100">
-                        Códigos Compartidos
+                        @lang('posts.shared_codes')
                     </h3>
                     @foreach ($post->codigos as $codigo)
                         <div class="bg-gray-100 dark:bg-gray-700 px-4 py-2 mb-2 text-sm flex justify-between items-center rounded dark:text-gray-100">
-                            <span class="uppercase font-bold">Lenguaje: {{ $codigo->lenguaje }}</span>
+                            <span class="uppercase font-bold">@lang('posts.language'): {{ $codigo->lenguaje }}</span>
                             <div class="flex gap-2 items-center">
                                 <button
                                     onclick="document.getElementById('codigo-{{ $codigo->id }}').classList.toggle('hidden')"
                                     class="bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs px-3 py-1 rounded"
                                 >
-                                    Ver Código
+                                    @lang('posts.view_code')
                                 </button>
                                 @if (auth()->check() && auth()->id() === $codigo->user_id)
                                     <form method="POST" action="{{ route('codigos.destroy', $codigo) }}">
@@ -206,7 +206,7 @@
                                         <button type="submit"
                                             class="bg-red-500 hover:bg-red-600 text-white font-bold text-xs px-3 py-1 rounded"
                                         >
-                                            Eliminar Código
+                                            @lang('posts.delete_code')
                                         </button>
                                     </form>
                                 @endif

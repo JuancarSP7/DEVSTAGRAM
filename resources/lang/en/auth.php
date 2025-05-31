@@ -37,4 +37,10 @@ return [
     'check_email_verification' => 'Before proceeding, please check your email for a verification link.',
     'not_receive_email' => 'If you did not receive the email,',
     'request_another'   => 'click here to request another',
+
+    'recover_password_page_title' => 'Recover password',
+    'recover_password_title' => 'Recover your password',
+    'email' => 'Email address',
+    'email_placeholder' => 'Your registered email',
+    'send_reset_link' => 'Send reset link',
 ];

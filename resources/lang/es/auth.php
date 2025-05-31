@@ -37,4 +37,11 @@ return [
     'check_email_verification' => 'Antes de continuar, revisa tu correo electrónico para el enlace de verificación.',
     'not_receive_email' => 'Si no recibiste el correo,',
     'request_another'   => 'haz clic aquí para solicitar otro',
+
+    //para reestablecer contraseña ("email.blade.php")
+    'recover_password_page_title' => 'Recuperar contraseña',
+    'recover_password_title' => 'Recupera tu contraseña',
+    'email' => 'Correo electrónico',
+    'email_placeholder' => 'Tu correo registrado',
+    'send_reset_link' => 'Enviar enlace de recuperación',
 ];

@@ -1,0 +1,22 @@
+<?php
+return [
+    'post_image_alt' => 'Imagen del post :title',
+    'delete_post' => 'Eliminar Publicación',
+    'add_new_comment' => 'Agrega un Nuevo Comentario',
+    'add_comment_label' => 'Añade un Comentario',
+    'add_comment_placeholder' => 'Agrega un Comentario',
+    'comment_button' => 'Comentar',
+    'comments' => 'Comentarios',
+    'delete_comment' => 'Eliminar Comentario',
+    'no_comments' => 'Sé el primero en comentar.',
+    'share_code' => 'Comparte tu Código',
+    'indicate_language' => 'Indica tu Lenguaje',
+    'code' => 'Código',
+    'code_placeholder' => 'Escribe tu código aquí...',
+    'share_code_button' => 'Compartir Código',
+    'shared_codes' => 'Códigos Compartidos',
+    'language' => 'Lenguaje',
+    'view_code' => 'Ver Código',
+    'delete_code' => 'Eliminar Código',
+    'others' => 'Otros',
+];

@@ -7,7 +7,7 @@
 
 @section('contenido')
     <div class="md:flex md:justify-center">
-        {{-- Contenedor del formulario con modo claro/oscuro --}}
+        {{-- Contenedor principal del formulario, soporta modo claro y oscuro --}}
         <div class="md:w-1/2 bg-white dark:bg-gray-800 dark:border dark:border-gray-700 shadow p-6">
             <form method="POST" action="{{ route('perfil.store') }}" enctype="multipart/form-data" class="mt-10 md:mt-0">
                 @csrf
@@ -34,7 +34,7 @@
                     @enderror
                 </div>
 
-                {{-- Campo IMAGEN con input personalizado y traducible --}}
+                {{-- Campo IMAGEN --}}
                 <div class="mb-5">
                     <label for="imagen" class="mb-2 block uppercase text-gray-500 dark:text-gray-300 font-bold">
                         @lang('index.imagen')
@@ -55,7 +55,7 @@
                                 @lang('index.seleccionar')
                             </span>
                         </label>
-                        {{-- Input file oculto, captura el nombre del archivo seleccionado y lo muestra --}}
+                        {{-- Input file oculto --}}
                         <input 
                             id="imagen"
                             name="imagen"
@@ -67,7 +67,7 @@
                     </div>
                 </div>
 
-                {{-- Botón de envío (guardar cambios) --}}
+                {{-- Botón de guardar cambios --}}
                 <input 
                     type="submit" 
                     value="@lang('index.guardar')" 
@@ -75,15 +75,17 @@
                 />
             </form>
 
-            {{-- Botón para darse de baja: igual que el de guardar cambios, pero en rojo y en mayúsculas --}}
+            {{-- Botón para darse de baja: TRADUCIDO --}}
             <div class="mt-10">
                 <a href="{{ route('perfil.baja') }}"
                    class="w-full block bg-red-600 hover:bg-red-700 transition-colors cursor-pointer uppercase font-bold p-3 text-white rounded-lg text-center"
                 >
-                    DARSE DE BAJA
+                    {{-- Traducción del botón --}}
+                    @lang('index.darse_baja')
                 </a>
                 <p class="text-s text-gray-400 mt-2 text-center">
-                    Esta opción eliminará permanentemente tu cuenta, publicaciones y comentarios.
+                    {{-- Traducción del aviso bajo el botón --}}
+                    @lang('index.aviso_baja')
                 </p>
             </div>
         </div>
