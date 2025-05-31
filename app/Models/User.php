@@ -13,6 +13,9 @@ use App\Models\Like;
 use App\Models\Comentario;
 use App\Models\Codigo;
 
+// IMPORTA tu notificación personalizada
+use App\Notifications\ResetPasswordNotification; // Asegúrate de que el namespace sea correcto
+
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -83,5 +86,20 @@ class User extends Authenticatable
      */
     public function siguiendo(User $user){
         return $this->followers->contains($user->id);
+    }
+
+    /**
+     * Sobrescribe el método para enviar la notificación personalizada
+     * de restablecimiento de contraseña.
+     *
+     * Esto hace que Laravel use tu plantilla de email y tus textos.
+     *
+     * @param  string  $token
+     * @return void
+     */
+    public function sendPasswordResetNotification($token)
+    {
+        // Usa tu propia notificación en vez de la de Laravel
+        $this->notify(new ResetPasswordNotification($token));
     }
 }
