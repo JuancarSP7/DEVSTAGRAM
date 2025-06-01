@@ -1,12 +1,16 @@
 @extends('layouts.app')
 
 @section('titulo')
-    Página Principal
+    {{-- Usamos la clave de traducción para el título principal --}}
+    @lang('home.titulo')
 @endsection
 
 @section('contenido')
-    <h2 class="text-xl text-gray-500 font-bold mb-4 text-center">Publicaciones de tus seguidores</h2>
+    {{-- Título secundario traducido --}}
+    <h2 class="text-xl text-gray-500 font-bold mb-4 text-center">
+        @lang('home.subtitulo')
+    </h2>
 
-    {{-- ✅ PASAMOS mostrarInfoAutor de forma compatible con Blade --}}
-    <x-listar-post :posts="$posts" mostrarInfoAutor="1" />
+    {{-- Pasamos mostrarInfoAutor como booleano para el componente --}}
+    <x-listar-post :posts="$posts" :mostrarInfoAutor="true" />
 @endsection
