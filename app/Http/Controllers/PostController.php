@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\NewPostFromFollowingMail;
+use Illuminate\Pagination\LengthAwarePaginator; // Importa para paginación manual
 
 class PostController extends Controller
 {
@@ -17,10 +18,37 @@ class PostController extends Controller
         $this->middleware('auth')->except(['show', 'index']);
     }
 
+    /**
+     * Muestra el muro de un usuario, con paginación ajustada a filas completas (7 posts por fila).
+     */
     public function index(User $user)
     {
-        // Obtiene los posts del usuario (para el muro)
-        $posts = Post::where('user_id', $user->id)->latest()->paginate(20);
+        $postsPorFila = 7;       // Número de posts por fila
+        $filasPorPagina = 3;     // Número de filas por página (ajusta si quieres más o menos filas)
+        $postsPorPagina = $postsPorFila * $filasPorPagina; // Total de posts por página
+
+        // Obtenemos todos los posts del usuario (puedes añadir filtros aquí si quieres)
+        $allPosts = Post::where('user_id', $user->id)
+                        ->latest()
+                        ->get();
+
+        // Calculamos la página actual
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+
+        // Cortamos la colección para la página actual
+        $currentItems = $allPosts->slice(($currentPage - 1) * $postsPorPagina, $postsPorPagina)->values();
+
+        // Creamos el paginador manual
+        $posts = new LengthAwarePaginator(
+            $currentItems,
+            $allPosts->count(),
+            $postsPorPagina,
+            $currentPage,
+            [
+                'path' => LengthAwarePaginator::resolveCurrentPath(),
+                'pageName' => 'page',
+            ]
+        );
 
         return view('dashboard', [
             'user' => $user,
@@ -51,7 +79,6 @@ class PostController extends Controller
         ]);
 
         // --- NOTIFICACIÓN A SEGUIDORES DEL USUARIO ---
-        // Obtenemos la colección de seguidores del usuario autenticado (el que publica)
         $author = auth()->user();
         $seguidores = $author->followers;
 
@@ -62,7 +89,7 @@ class PostController extends Controller
                 $follower->email &&
                 $follower->id !== $author->id &&
                 filter_var($follower->email, FILTER_VALIDATE_EMAIL) &&
-                !str_contains($follower->email, 'correo.com') // <--- Cambia aquí si usas otro dominio de prueba
+                !str_contains($follower->email, 'correo.com')
             ) {
                 // Envía el correo a cada follower válido usando el Mailable personalizado
                 Mail::to($follower->email)->send(new NewPostFromFollowingMail($author, $post));

@@ -19,7 +19,7 @@ class HomeController extends Controller
     $posts = Post::whereIn('user_id', $ids)
                  ->with('user') // ❗️ Muy importante
                  ->latest()
-                 ->paginate(20);
+                 ->paginate(21);
 
     return view('home', [
         'posts' => $posts

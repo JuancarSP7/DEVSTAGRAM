@@ -192,4 +192,47 @@ return [
         // 'titulo' => 'title',
         // 'descripcion' => 'description',
     ],
+
+    // --- CUSTOMIZED PASSWORD MESSAGES ---
+    'min' => [
+        'array'   => 'The :attribute must have at least :min items.',
+        'file'    => 'The :attribute must be at least :min kilobytes.',
+        'numeric' => 'The :attribute must be at least :min.',
+        // CUSTOM: For password, see 'custom' below.
+        'string'  => 'The :attribute must be at least :min characters.',
+    ],
+
+    // Global confirmation message, but we'll override for password below
+    'confirmed' => 'The :attribute confirmation does not match.',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Custom Validation Language Lines
+    |--------------------------------------------------------------------------
+    |
+    | Here you may specify custom validation messages for attributes.
+    | Use the format "attribute.rule" => "custom message".
+    |
+    */
+    'custom' => [
+        // For password minimum length
+        'password' => [
+            'min' => 'The password must be at least 6 characters.', // Shows if password too short
+            'confirmed' => 'The password confirmation does not match.', // Shows if password and confirmation do not match
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Custom Validation Attributes
+    |--------------------------------------------------------------------------
+    |
+    | You may customize the attribute names below for clearer messages.
+    |
+    */
+    'attributes' => [
+        'email'                 => 'email address',
+        'password'              => 'password',
+        'password_confirmation' => 'password confirmation',
+    ],
 ];

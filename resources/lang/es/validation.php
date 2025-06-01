@@ -191,4 +191,57 @@ return [
         // 'titulo' => 'título',
         // 'descripcion' => 'descripción',
     ],
+
+    // --- PERSONALIZACIÓN DE MENSAJES ESPECÍFICOS ---
+    // -----------------------------------------------
+    // Cambia los mensajes de:
+    // - Mínimo de caracteres para contraseña
+    // - Confirmación de contraseña
+
+    'min' => [
+        'array'   => 'El campo :attribute debe tener al menos :min elementos.',
+        'file'    => 'El campo :attribute debe tener al menos :min kilobytes.',
+        'numeric' => 'El campo :attribute debe tener al menos :min.',
+        // PERSONALIZADO: Si el campo es 'password', mensaje específico
+        'string'  => 'El campo :attribute debe tener al menos :min caracteres.',
+    ],
+
+    // Cambia solo el mensaje de confirmación
+    'confirmed' => 'El campo de confirmación de password no coincide.',
+
+    // Otras validaciones siguen igual (por claridad, las dejo fuera del snippet)
+
+    /*
+    |--------------------------------------------------------------------------
+    | Mensajes de validación personalizados
+    |--------------------------------------------------------------------------
+    |
+    | Aquí puedes especificar mensajes personalizados para reglas concretas.
+    | Usa el formato "attribute.regla" => "mensaje personalizado".
+    |
+    */
+    'custom' => [
+        // PERSONALIZACIÓN MUY PRECISA:
+        // Cuando el campo es 'password' y falla la regla 'min'
+        'password' => [
+            'min' => 'La contraseña debe tener al menos 6 caracteres.', // <--- Este es el mensaje que verás si la contraseña es demasiado corta
+        ],
+        'password' => [
+            'confirmed' => 'El campo de confirmación de password no coincide.', // <--- Mensaje para confirmación (por si acaso)
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Atributos personalizados
+    |--------------------------------------------------------------------------
+    |
+    | Personalización para que los mensajes sean más naturales y claros
+    |
+    */
+    'attributes' => [
+        'email'                 => 'correo electrónico',
+        'password'              => 'contraseña',
+        'password_confirmation' => 'confirmar contraseña',
+    ],
 ];
